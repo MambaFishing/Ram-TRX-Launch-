@@ -1,0 +1,176 @@
+import { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { ChevronLeftIcon, ChevronRightIcon, PauseIcon, PlayIcon, SunIcon, MoonIcon } from 'lucide-react';
+
+const slides = [
+  {
+    title: 'Ram 1500 SRT TRX Front',
+    desc: 'Aggressive widebody front design with massive grille.',
+    src: 'https://hips.hearstapps.com/hmg-prod/images/rm027-057fn-695424accbb86.jpg',
+  },
+  {
+    title: 'Ram TRX Side',
+    desc: 'Aerodynamic side view with 35" off-road tires.',
+    src: 'https://moparinsiders.com/wp-content/uploads/2025/12/RM027_001FN.jpeg',
+  },
+  {
+    title: 'Ram TRX Rear',
+    desc: 'Powerful rear design with dual exhausts.',
+    src: 'https://hips.hearstapps.com/hmg-prod/images/rm027-072fn-6954249e52e47.jpg',
+  },
+  {
+    title: 'Ram TRX Interior',
+    desc: 'Premium interior with 14.5" touchscreen.',
+    src: 'https://www.jalopnik.com/img/gallery/ram-brings-back-the-1500-trx-for-2027-now-with-777-hp-from-its-supercharged-v8-and-the-srt-brand-is-back-too/intro-1767379991.jpg',
+  },
+];
+
+const specs = [
+  { label: 'Horsepower', value: '777 hp' },
+  { label: 'Torque', value: '680 lb-ft' },
+  { label: '0-60 mph', value: '~3.5s' },
+  { label: 'Top Speed', value: '≈200 mph' },
+  { label: 'Tires', value: '35″ off-road' },
+  { label: 'Suspension', value: 'Adaptive Performance' },
+  { label: 'Engine', value: '6.2L Hellcat V8 Supercharged' },
+  { label: 'Infotainment', value: '14.5″ Touchscreen' },
+  { label: 'Seats', value: 'Premium Leather' },
+];
+
+export default function Home() {
+  const [current, setCurrent] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Auto-slide carousel
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const nextSlide = () => setCurrent((current + 1) % slides.length);
+  const prevSlide = () =>
+    setCurrent((current - 1 + slides.length) % slides.length);
+
+  return (
+    <div className={darkMode ? 'dark' : ''}>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 flex flex-col items-center">
+        
+        {/* Header & Dark/Light Toggle */}
+        <div className="w-full max-w-5xl flex justify-between items-center mb-6">
+          <h1 className="text-4xl font-bold text-center">2026/2027 Ram 1500 SRT TRX – 777 HP Hellcat V8</h1>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          >
+            {darkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
+          </button>
+        </div>
+
+        <Card className="max-w-5xl w-full rounded-2xl shadow-xl mb-6">
+          <CardContent className="space-y-4 text-center">
+            <p className="text-gray-700 dark:text-gray-300">
+              The most powerful gas-powered half-ton pickup ever. Supercharged
+              6.2L Hellcat HEMI® V8 producing 777 hp and 680 lb-ft of torque.
+            </p>
+
+            {/* Carousel */}
+            <div className="relative w-full h-96 overflow-hidden rounded-xl">
+              {slides.map((slide, idx) => (
+                <div
+                  key={idx}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                    idx === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  }`}
+                >
+                  <img
+                    src={slide.src}
+                    alt={slide.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-3 rounded-md max-w-xs">
+                    <h3 className="font-bold text-lg">{slide.title}</h3>
+                    <p className="text-sm">{slide.desc}</p>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                onClick={prevSlide}
+                className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition"
+              >
+                <ChevronLeftIcon className="w-6 h-6" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition"
+              >
+                <ChevronRightIcon className="w-6 h-6" />
+              </button>
+
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="absolute top-2 right-12 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition"
+              >
+                {isPlaying ? <PauseIcon className="w-6 h-6" /> : <PlayIcon className="w-6 h-6" />}
+              </button>
+            </div>
+
+            {/* Thumbnail Navigation */}
+            <div className="flex justify-center space-x-3 mt-3 overflow-x-auto">
+              {slides.map((slide, idx) => (
+                <img
+                  key={idx}
+                  src={slide.src}
+                  alt={slide.title}
+                  onClick={() => setCurrent(idx)}
+                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-4 transition-transform duration-300 ${
+                    idx === current
+                      ? 'border-blue-600 scale-105'
+                      : 'border-transparent hover:scale-105'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Auto-scrolling specs section */}
+            <div className="mt-6 overflow-x-auto whitespace-nowrap py-2 bg-gray-200 dark:bg-gray-800 rounded-xl">
+              {specs.map((s, idx) => (
+                <div
+                  key={idx}
+                  className="inline-block w-40 m-2 p-4 bg-white dark:bg-gray-700 rounded-lg shadow text-center"
+                >
+                  <h3 className="font-bold">{s.label}</h3>
+                  <p className="text-blue-600 dark:text-blue-400">{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Engine Video */}
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold mb-2">Engine Video</h2>
+              <div className="aspect-w-16 aspect-h-9">
+                <iframe
+                  src="https://www.youtube.com/embed/7v60aeg-6hs"
+                  title="Ram TRX Engine Video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full rounded-xl"
+                ></iframe>
+              </div>
+            </div>
+
+          </CardContent>
+        </Card>
+
+        <p className="text-gray-500 dark:text-gray-400 text-center mt-4">
+          Experience the TRX with 777 hp Hellcat V8. Fastest half-ton pickup ever!
+        </p>
+      </div>
+    </div>
+  );
+}
