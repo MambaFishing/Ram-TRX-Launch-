@@ -1,0 +1,133 @@
+import Head from 'next/head';
+import { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PauseIcon,
+  PlayIcon,
+  SunIcon,
+  MoonIcon,
+  GithubIcon,
+} from 'lucide-react';
+
+const slides = [
+  {
+    title: 'Ram 1500 SRT TRX Front',
+    desc: 'Aggressive widebody front design with massive grille.',
+    src: 'https://hips.hearstapps.com/hmg-prod/images/rm027-057fn-695424accbb86.jpg',
+  },
+  {
+    title: 'Ram TRX Side',
+    desc: 'Aerodynamic side view with 35" off-road tires.',
+    src: 'https://moparinsiders.com/wp-content/uploads/2025/12/RM027_001FN.jpeg',
+  },
+  {
+    title: 'Ram TRX Rear',
+    desc: 'Powerful rear design with dual exhausts.',
+    src: 'https://hips.hearstapps.com/hmg-prod/images/rm027-072fn-6954249e52e47.jpg',
+  },
+  {
+    title: 'Ram TRX Interior',
+    desc: 'Premium interior with 14.5" touchscreen.',
+    src: 'https://www.jalopnik.com/img/gallery/ram-brings-back-the-1500-trx-for-2027-now-with-777-hp-from-its-supercharged-v8-and-the-srt-brand-is-back-too/intro-1767379991.jpg',
+  },
+];
+
+const specs = [
+  { label: 'Horsepower', value: '777 hp' },
+  { label: 'Torque', value: '680 lb-ft' },
+  { label: '0–60 mph', value: '~3.5s' },
+  { label: 'Top Speed', value: '≈200 mph' },
+  { label: 'Tires', value: '35″ Off-Road' },
+  { label: 'Suspension', value: 'Adaptive Performance' },
+  { label: 'Engine', value: '6.2L Hellcat V8 Supercharged' },
+  { label: 'Infotainment', value: '14.5″ Touchscreen' },
+  { label: 'Seats', value: 'Premium Leather' },
+];
+
+export default function Home() {
+  const [current, setCurrent] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(
+      () => setCurrent((prev) => (prev + 1) % slides.length),
+      3000
+    );
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  return (
+    <>
+      <Head>
+        <title>Ram TRX 777HP – Launch Experience</title>
+        <meta
+          name="description"
+          content="Experience the 2026/2027 Ram TRX with a 777HP supercharged Hellcat V8."
+        />
+        <meta property="og:title" content="Ram TRX 777HP Launch" />
+        <meta
+          property="og:description"
+          content="The most powerful half-ton pickup ever built."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
+      <div className={darkMode ? 'dark' : ''}>
+        {/* Sticky Launch Nav */}
+        <nav className="sticky top-0 z-50 backdrop-blur bg-white/80 dark:bg-gray-900/80 border-b">
+          <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
+            <span className="font-bold text-lg">RAM TRX</span>
+            <div className="flex items-center space-x-6">
+              <a href="#home" className="hover:text-blue-600">Home</a>
+              <a href="#specs" className="hover:text-blue-600">Specs</a>
+              <a href="#engine" className="hover:text-blue-600">Engine</a>
+              <a
+                href="https://github.com/YOUR_USERNAME/ram-trx-launch"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center space-x-1 hover:text-blue-600"
+              >
+                <GithubIcon className="w-5 h-5" />
+              </a>
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
+              >
+                {darkMode ? <SunIcon /> : <MoonIcon />}
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        <main
+          id="home"
+          className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 flex flex-col items-center"
+        >
+          <h1 className="text-4xl font-bold text-center mb-6">
+            2026/2027 Ram 1500 SRT TRX – 777 HP Hellcat V8
+          </h1>
+
+          <Card className="max-w-5xl w-full rounded-2xl shadow-xl">
+            <CardContent className="space-y-6 text-center">
+              {/* Carousel */}
+              <div className="relative w-full h-96 overflow-hidden rounded-xl">
+                {slides.map((slide, idx) => (
+                  <img
+                    key={idx}
+                    src={slide.src}
+                    alt={slide.title}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                      idx === current ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Specs */}
+              <section
+                id="specs"
+                className="overflow-x-auto
